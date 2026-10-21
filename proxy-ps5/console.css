@@ -1,0 +1,89 @@
+/* Console look: a big horizontal tile home screen with controller navigation. Original design. */
+@property --h{syntax:'<number>';inherits:true;initial-value:220}
+
+#con{display:none}
+body.console{
+  --win:#12141b;--win-text:#f2f4f8;--win-border:rgba(255,255,255,.12);--chrome:#1b1e27;--card:#1a1d26;--hover:rgba(255,255,255,.09);
+  --menubg:rgba(22,24,32,.92);--text:#f4f4f8;--muted:rgba(255,255,255,.62);--tb:0px;
+  background:#07080d;color-scheme:dark;
+}
+body.console .desktop,body.console .taskbar,body.console .start,body.console .wallpaper,body.console .petals{display:none !important}
+body.console #con{display:block;position:fixed;inset:0;z-index:8;overflow:hidden;color:#fff;font-family:"Segoe UI Variable","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+
+/* background */
+.c-bg{position:absolute;inset:0;background:#07080d}
+.c-bg::before{content:"";position:absolute;inset:-40px;background:var(--wallpaper) center/cover;opacity:.22;filter:blur(34px) saturate(1.3)}
+.c-glow{position:absolute;inset:0;transition:--h .7s ease;
+  background:
+    radial-gradient(62% 70% at 78% 18%,hsl(var(--h) 85% 48%/.5),transparent 70%),
+    radial-gradient(55% 60% at 8% 95%,hsl(calc(var(--h) + 50) 75% 38%/.38),transparent 72%),
+    linear-gradient(180deg,rgba(7,8,13,.1),rgba(7,8,13,.75))}
+.c-bg i{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);width:3px;height:3px;animation:tw 4s ease-in-out infinite}
+@keyframes tw{50%{opacity:.15}}
+
+/* top bar */
+.c-top{position:absolute;left:0;right:0;top:0;height:84px;padding:0 5vw;display:flex;align-items:center;justify-content:space-between;z-index:2}
+.c-tabs{display:flex;gap:30px;align-items:center}
+.c-tab{border:0;background:none;color:rgba(255,255,255,.55);font-size:19px;font-weight:600;padding:8px 2px;position:relative;cursor:pointer;letter-spacing:.2px;transition:color .2s}
+.c-tab::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;border-radius:2px;background:#fff;transform:scaleX(0);transition:transform .25s}
+.c-tab.on{color:#fff}.c-tab.on::after{transform:scaleX(1)}
+.c-lr{font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,.35);border-radius:6px;padding:2px 6px;color:rgba(255,255,255,.7);opacity:0;transition:opacity .2s}
+body.c-padon .c-lr{opacity:1}
+.c-right{display:flex;align-items:center;gap:18px;font-size:16px;font-weight:600}
+.c-pad{display:none;width:26px;height:26px;opacity:.85}
+body.c-padon .c-pad{display:block}
+.c-pad svg{width:100%;height:100%;fill:none;stroke:#fff;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.c-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,hsl(var(--h) 80% 60%),hsl(calc(var(--h) + 60) 70% 45%));display:flex;align-items:center;justify-content:center;font-weight:700;box-shadow:0 0 0 2px rgba(255,255,255,.5)}
+
+/* tile row */
+.c-main{position:absolute;left:0;right:0;top:84px;bottom:74px;display:flex;flex-direction:column;justify-content:center;gap:4vmin;z-index:1}
+.c-rowwrap{overflow:hidden;padding:34px 0 40px;margin-top:-4vmin}
+.c-row{display:flex;gap:2.2vmin;padding-left:7vw;padding-right:40vw;transition:transform .38s cubic-bezier(.2,.8,.2,1);will-change:transform;width:max-content}
+.c-tile{--t:clamp(118px,19vmin,210px);flex:0 0 auto;width:var(--t);height:var(--t);border:0;border-radius:calc(var(--t)*.1);padding:0;position:relative;overflow:hidden;cursor:pointer;color:#fff;
+  background:linear-gradient(160deg,hsl(var(--th) 62% 46%),hsl(calc(var(--th) + 40) 62% 22%));
+  box-shadow:0 8px 22px rgba(0,0,0,.4);opacity:.74;transform:scale(1);transition:transform .25s cubic-bezier(.2,.9,.3,1.2),opacity .25s,box-shadow .25s;outline:none}
+.c-tile .art{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:calc(var(--t)*.46);filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.c-tile .art img{width:56%;height:56%}
+.c-tile .lbl{position:absolute;left:0;right:0;bottom:0;padding:22px 10px 9px;background:linear-gradient(transparent,rgba(0,0,0,.72));font-size:clamp(11px,1.7vmin,14px);font-weight:600;text-align:left;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.c-tile::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 0 #fff;transition:box-shadow .2s;pointer-events:none}
+.c-tile.on{opacity:1;transform:scale(1.14) translateY(-4px);z-index:2;box-shadow:0 0 0 3px #fff,0 0 34px 6px hsl(var(--th) 90% 60%/.5),0 20px 46px rgba(0,0,0,.55)}
+.c-tile:not(.on):hover{opacity:.92}
+
+/* info under the row */
+.c-info{padding:0 7vw;max-width:880px;min-height:150px}
+.c-info h1{margin:0 0 8px;font-size:clamp(26px,5vmin,44px);font-weight:700;letter-spacing:.2px;text-shadow:0 2px 14px rgba(0,0,0,.5)}
+.c-info p{margin:0 0 20px;font-size:clamp(14px,2.2vmin,18px);color:rgba(255,255,255,.75);line-height:1.45;max-width:640px}
+.c-play{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;padding:12px 34px;background:#fff;color:#0a0c14;font-weight:700;font-size:17px;cursor:pointer;box-shadow:0 8px 26px rgba(0,0,0,.4);transition:transform .15s}
+.c-play:hover{transform:scale(1.04)}.c-play svg{width:16px;height:16px;fill:currentColor}
+.c-info.pop h1,.c-info.pop p,.c-info.pop .c-play{animation:cin .3s ease both}
+@keyframes cin{from{opacity:0;transform:translateY(8px)}}
+
+/* hints */
+.c-hints{position:absolute;left:0;right:0;bottom:0;height:74px;display:flex;align-items:center;justify-content:flex-end;gap:26px;padding:0 5vw;z-index:2;font-size:14px;color:rgba(255,255,255,.78);background:linear-gradient(transparent,rgba(0,0,0,.5))}
+.c-hints span{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.gb{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;padding:0 7px;border-radius:13px;border:2px solid rgba(255,255,255,.8);font-style:normal;font-weight:700;font-size:12px;color:#fff}
+@media (max-width:640px){.c-hints{gap:12px;font-size:12px}.c-hints .opt{display:none}.c-tabs{gap:18px}.c-tab{font-size:16px}}
+
+/* apps run full screen with a slim Back bar */
+body.console .win,body.console .win.max{inset:0 !important;width:100% !important;height:100% !important;border:0;border-radius:0;box-shadow:none;animation:capp .25s ease;z-index:30}
+@keyframes capp{from{opacity:0;transform:scale(1.03)}}
+body.console .win-head{height:48px;background:rgba(10,12,18,.96);padding:0 14px 0 10px;border-bottom:1px solid var(--win-border);font-size:14px;cursor:default}
+body.console .win-head .wc{order:-1;margin-right:12px}
+body.console .win-head .wb.m,body.console .win-head .wb.z{display:none}
+body.console .win-head .wb.x{width:auto;height:34px;padding:0 18px;border-radius:17px;background:rgba(255,255,255,.12);color:#fff;font-weight:600;font-size:14px}
+body.console .win-head .wb.x svg{display:none}
+body.console .win-head .wb.x::after{content:"\2190  Back"}
+body.console .win-head .wb.x:hover{background:rgba(255,255,255,.22);color:#fff}
+body.console .win-head .wi{width:20px;height:20px}
+body.console .win-title{font-weight:600;font-size:15px}
+body.console .win-body{padding:26px 5vw}
+body.console .win-body.frame{padding:0}
+body.console .toast{bottom:90px;z-index:400}
+
+/* visible focus while navigating with controller / keyboard */
+body.c-nav :focus{outline:3px solid #fff !important;outline-offset:2px;border-radius:8px}
+body.c-nav .c-tile:focus{outline:none !important}
+body.c-nav .win-head .wb.x:focus{box-shadow:0 0 0 3px #fff}
+body.console .set .card{background:var(--card)}
+body.console .set .tog input{width:46px;height:24px}
+body.console *{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.25) transparent}
